@@ -354,10 +354,10 @@ body{background:#f0f2f5;color:#0d1b2a}
 .cilbl{font-size:13px;font-weight:700;margin-bottom:2px;color:#0d1b2a}
 .cisub{font-size:12px;color:#0a2e5c;font-family:Arial,system-ui,-apple-system,sans-serif;font-weight:900;letter-spacing:.01em;-webkit-text-stroke:0.4px #0a2e5c;text-shadow:0 0 0.3px #0a2e5c}
 .tg{display:flex;gap:3px;flex-shrink:0}
-.tb{padding:4px 9px;border-radius:20px;border:.5px solid #e2e8f0;font-size:10px;cursor:pointer;background:#fff;color:#4a5568;transition:all .15s;white-space:nowrap;font-family:system-ui,sans-serif;font-weight:500}
+.tb{padding:5px 11px;border-radius:20px;border:1.5px solid #e2e8f0;font-size:12px;cursor:pointer;background:#fff;color:#4a5568;transition:all .15s;white-space:nowrap;font-family:Arial,sans-serif;font-weight:900;letter-spacing:.01em}
 .tb:active{transform:scale(.95)}
-.tb.ty{background:#e8f8f0;border-color:#a3d9be;color:#1a7a4a;font-weight:600}
-.tb.tn{background:#fef0f0;border-color:#f5bfc0;color:#c0392b;font-weight:600}
+.tb.ty{background:#e8f8f0;border-color:#1a7a4a;color:#1a7a4a;font-weight:900;border-width:2px;-webkit-text-stroke:.3px #1a7a4a}
+.tb.tn{background:#fef0f0;border-color:#c0392b;color:#c0392b;font-weight:900;border-width:2px;-webkit-text-stroke:.3px #c0392b}
 .num-in{width:68px;border:.5px solid #e2e8f0;border-radius:6px;padding:4px 7px;font-size:12px;text-align:center;background:#fff;color:#0d1b2a;font-family:monospace}
 .num-in:focus{outline:none;border-color:#0a2e5c}
 .unit-lbl{font-size:9px;color:#8a94a6;font-family:monospace;margin-right:2px}
@@ -794,8 +794,8 @@ function buildForm(){
       html+=`<div class="ci">
         <div class="ciinfo"><div class="cilbl">${c.lbl}</div><div class="cisub">${c.sub}</div></div>
         <div class="tg">
-          <button class="tb ${v===true?'ty':''}" onclick="sv('${c.id}',true)">✓ تم</button>
-          <button class="tb ${v===false?'tn':''}" onclick="sv('${c.id}',false)">✗ لا</button>
+          <button class="tb ${v===true?'ty':''}" onclick="sv('${c.id}',true)">✓ Done</button>
+          <button class="tb ${v===false?'tn':''}" onclick="sv('${c.id}',false)">✗ No</button>
         </div></div>`;
     } else if(c.type==='num'){
       html+=`<div class="ci" style="align-items:center">
@@ -969,7 +969,7 @@ function renderRecs(){
       <div class="rtech">👷 ${r.tech} | ${r.unit.zoneName}</div>
       <div class="rpills">
         <span class="rp" style="background:#e8f8f0;color:#1a7a4a">✓ ${r.doneT}</span>
-        ${r.notDoneT?`<span class="rp" style="background:#fef0f0;color:#c0392b">✗ ${r.notDoneT}</span>`:''}
+        ${r.notDoneT?`<span class="rp" style="background:#fef0f0;color:#c0392b;font-weight:900;font-family:Arial;border:1px solid #c0392b">✗ No: ${r.notDoneT}</span>`:''}
         ${r.data.notes?`<span class="rp" style="background:#fff3e0;color:#a05c00">📝</span>`:''}
         ${r._fbId?'<span class="rp" style="background:#e8f0ff;color:#1a5fae">☁️ محفوظ</span>':'<span class="rp" style="background:#fff3e0;color:#a05c00">⏳ محلي</span>'}
         <button class="rbtn" onclick="quickPrint(records[${i}])">🖨️</button>
@@ -1080,7 +1080,7 @@ function printR(rec,sigs){
   </div>
   <table><tr><th>بند الصيانة</th><th>الوصف</th><th>النتيجة</th></tr>
   ${checks.map(c=>{const v=rec.data[c.id];
-    const res=c.type==='num'?`<span style="font-weight:600">${v||'—'} ${c.unit||''}</span>`:(v===true?'<span class="ok">✓ تم</span>':v===false?'<span class="no">✗ لم يتم</span>':'<span style="color:#aaa">—</span>');
+    const res=c.type==='num'?`<span style="font-weight:600">${v||'—'} ${c.unit||''}</span>`:(v===true?'<span style="color:#1a7a4a;font-weight:900;font-family:Arial;font-size:13px">✓ Done</span>':v===false?'<span style="color:#c0392b;font-weight:900;font-family:Arial;font-size:13px">✗ Not Done</span>':'<span style="color:#aaa">—</span>');
     return`<tr><td><b>${c.lbl}</b></td><td style="font-size:12px;color:#0a2e5c;font-weight:800;font-family:Arial,sans-serif;-webkit-text-stroke:0.3px #0a2e5c">${c.sub}</td><td>${res}</td></tr>`;
   }).join('')}</table>
   ${rec.data.notes?`<div class="notes-box"><b>📝 ملاحظات إضافية:</b><br><br>${rec.data.notes}</div>`:''}
@@ -1211,8 +1211,8 @@ function buildReportHTML(rec, sigs){
     var v=rec.data[c.id];
     var res=c.type==='num'
       ?'<b style="font-family:Arial;color:#0a2e5c">'+(v||'—')+' '+(c.unit||'')+'</b>'
-      :v===true?'<span style="color:#1a7a4a;font-weight:900;font-family:Arial">✓ Done</span>'
-      :v===false?'<span style="color:#c0392b;font-weight:900;font-family:Arial">✗ Not Done</span>'
+      :v===true?'<span style="color:#1a7a4a;font-weight:900;font-family:Arial;font-size:13px">✓ Done</span>'
+      :v===false?'<span style="color:#c0392b;font-weight:900;font-family:Arial;font-size:13px">✗ Not Done</span>'
       :'<span style="color:#aaa">—</span>';
     return '<tr><td style="font-weight:700;color:#0d1b2a;font-family:Arial">'+c.lbl+'</td>'
           +'<td style="font-size:12px;color:#0a2e5c;font-weight:900;font-family:Arial;-webkit-text-stroke:.3px #0a2e5c">'+c.sub+'</td>'
